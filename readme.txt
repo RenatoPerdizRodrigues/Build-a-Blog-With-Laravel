@@ -1,5 +1,7 @@
 ## Laravel Blog Project ##
 
-Built using DevMarketer's <a href="https://www.youtube.com/playlist?list=PLwAKR305CRO-Q90J---jXVzbOd4CDRbVx">How to Build a Blog With Laravel</a> as a guide!
-<hr>
-After migrating and seeding the tables, access the login with the credentials <i>admin / 123456</i>.
+Built using DevMarketer's "How to Build a Blog With Laravel" series as a guide! Access it here:
+
+https://www.youtube.com/playlist?list=PLwAKR305CRO-Q90J---jXVzbOd4CDRbVx
+
+After migrating and seeding the tables, access the login with the credentials admin / 123456.
