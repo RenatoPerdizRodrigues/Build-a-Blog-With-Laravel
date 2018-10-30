@@ -25,6 +25,11 @@ $this->post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail'
 $this->get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
 $this->post('password/reset', 'Auth\ResetPasswordController@reset');
 
+//Except or only 
+Route::resource('categories', 'CategoryController', ['except' => ['create']]);
+
+Route::resource('tags', 'TagController');
+
 Route::get('blog/{slug}', 'BlogController@getSingle')->name('blog.single')->where('slug', '[\w\d\-\_]+');
 
 Route::get('blog', 'BlogController@getIndex')->name('blog.index');
