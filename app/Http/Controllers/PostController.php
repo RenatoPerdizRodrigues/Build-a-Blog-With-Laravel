@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Post;
 use App\Category;
+use App\Tag;
 use Session;
 
 class PostController extends Controller
@@ -32,8 +33,9 @@ class PostController extends Controller
      */
     public function create()
     {
+        $tags = Tag::all();
         $categories = Category::all();
-        return view('posts.create')->withCategories($categories);
+        return view('posts.create')->withCategories($categories)->withTags($tags);
     }
 
     /**
@@ -47,7 +49,7 @@ class PostController extends Controller
         //Validar dados
         $this->validate($request, array(
             'title' => 'required|max:255',
-            'slug' => 'required|alpha_dash|min:5|max:255|unique:posts,slug',
+            'slug' => 'required|alpha_dash|min:5|max:255|unique:posts,slug',     
             'category' => 'required|numeric',
             'body' => 'required'
         ));
@@ -61,6 +63,8 @@ class PostController extends Controller
         $post->body = $request->body;
 
         $post->save();
+
+        $post->tags()->sync($request->tags, false);
 
         //Put salvaria a mensagem
         Session::flash('success', 'The blog post was successfully saved!');
@@ -91,7 +95,12 @@ class PostController extends Controller
     {
         $post = Post::find($id);
         $categories = Category::all();
-        return view('posts.edit')->withPost($post)->withCategories($categories);
+        $tags = Tag::all();
+        $tags2 = array();
+        foreach($tags as $tag){
+            $tags2[$tag->id] = $tag->name;
+        }
+        return view('posts.edit')->withPost($post)->withCategories($categories)->withTags($tags);
     }
 
     /**
@@ -129,6 +138,11 @@ class PostController extends Controller
 
         $post->save();
 
+        if(isset($request->tags)){
+            $post->tags()->sync($request->tags, true);
+        } else {
+            $post->tags()->sync(array());
+        }
         //Redirecionar com mensagem
         Session::flash('success', 'The post was successfully edited');
         return redirect()->route('posts.show', $post->id);
@@ -143,7 +157,8 @@ class PostController extends Controller
     public function destroy($id)
     {
         $post = Post::find($id);
-        $post->delete();
+        $post->tags()->detach();
+        $post->delete();;
 
         Session::flash('success', "Post was successfully deleted.");
         return redirect()->route('posts.index');

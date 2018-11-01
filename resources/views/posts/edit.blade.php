@@ -2,6 +2,11 @@
 
 @section('title', ' - Edit Blog Post')
 
+@section('stylesheet')
+    {!! Html::style('css/parsley.css') !!}
+    {!! Html::style('css/select2.min.css') !!}
+@stop
+
 @section('content')
     <div class="row">
         {!! Form::model($post, ['route' => ['posts.update', $post->id], 'method' => 'POST']) !!}
@@ -16,6 +21,13 @@
                 <select class="form-control" name="category">
                     @foreach($categories as $category)
                         <option value='{{$category->id}}'>{{$category->name}}</option>
+                    @endforeach
+                </select>
+
+                {{ Form::label('tags', 'Tags', ['class' => 'form-spacing-top'])}}
+                <select class="form-control select2-multi" name="tags[]" multiple="multiple">
+                    @foreach($tags as $tag)
+                        <option value="{{$tag->id}}">{{ $tag->name }}</option>
                     @endforeach
                 </select>
 
@@ -53,4 +65,14 @@
         </div>
         {!! Form::close() !!}
     </div>
+@stop
+
+@section('scripts')
+    {!! Html::script('js/parsley.min.js') !!}
+    {!! Html::script('js/select2.full.min.js') !!}
+
+    <script type="text/javascript">
+        $('.select2-multi').select2();
+        $('.select2-multi').select2().val({!! json_encode($post->tags()->allRelatedIds()) !!}).trigger('change');
+    </script>
 @stop

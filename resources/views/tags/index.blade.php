@@ -17,8 +17,8 @@
                 <tbody>
                     @foreach($tags as $tag)
                     <tr>
-                            <td>{{$tag->id}}</td>
-                            <td>{{$tag->name}}</td>
+                        <td>{{$tag->id}}</td>
+                        <td><a href="{{ route('tags.show', $tag->id) }}">{{$tag->name}}</a></td>
                     </tr>
                     @endforeach
                 </tbody>
