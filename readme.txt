@@ -21,6 +21,7 @@ How to Use:
 2. Use "composer install" in the blog folder to add the necessary files;
 3. Configure the database info on the .env file, and the mail driver should the mail funcionality be tested too;
 4. Use "php artisan migrate" to create the tables, and "php artisan db:seed" to populate them.
-5. After migrating and seeding the tables, access the login with the credentials admin / 123456.
+5. Generate the key with "php artisan key:generate";
 
+After the proper setup, you can access the login with the credentials admin / 123456.
 The seeds will create 10 random blogposts, with a few comments and an image on each.
