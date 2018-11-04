@@ -23,5 +23,5 @@ How to Use:
 4. Use "php artisan migrate" to create the tables, and "php artisan db:seed" to populate them.
 5. Generate the key with "php artisan key:generate";
 
-After the proper setup, you can access the login with the credentials admin / 123456.
+After the proper setup, you can access the login with the credentials admin@gmail.com / 123456.
 The seeds will create 10 random blogposts, with a few comments and an image on each.
