@@ -7,6 +7,9 @@ use App\Post;
 use App\Category;
 use App\Tag;
 use Session;
+use Purifier;
+use Image;
+use Storage;
 
 class PostController extends Controller
 {
@@ -51,7 +54,8 @@ class PostController extends Controller
             'title' => 'required|max:255',
             'slug' => 'required|alpha_dash|min:5|max:255|unique:posts,slug',     
             'category' => 'required|numeric',
-            'body' => 'required'
+            'body' => 'required',
+            'featured_image' => 'sometimes|image'
         ));
 
         //Inserir no BD
@@ -60,7 +64,19 @@ class PostController extends Controller
         $post->title = $request->title;
         $post->slug = $request->slug;
         $post->category_id = $request->category;
-        $post->body = $request->body;
+        $post->body = Purifier::clean($request->body);
+
+        //Save image if necessary
+        if ($request->hasfile('featured_image')){
+            $image = $request->file('featured_image');
+            $filename = time() . '.' . $image->getClientOriginalExtension();
+            $location = public_path('images/' . $filename);
+            Image::make($image)->resize(800, 400)->save($location);
+
+            //Tell post where the post is
+
+            $post->image = $filename;
+        }
 
         $post->save();
 
@@ -121,7 +137,11 @@ class PostController extends Controller
                 'category' => 'required|numeric',
                 'body' => 'required'
             ));
-        } else {
+        } elseif($request->featured_image && $request->featured_image != $original->image) {
+            $this->validate($request, array(
+                'featured_image' => 'image'
+            ));    
+        } elseif($request->slug == $original->slug){ 
             $this->validate($request, array(
                 'title' => 'required|max:255',
                 'category' => 'required|numeric',
@@ -131,10 +151,20 @@ class PostController extends Controller
 
         //Editamos os dados
         $post = Post::find($id);
+                        //Checks if image has been uploaded
+                        if ($request->hasfile('featured_image')){
+                            $image = $request->file('featured_image');
+                            $filename = time() . '.' . $image->getClientOriginalExtension();
+                            $location = public_path('images/' . $filename);
+                            Image::make($image)->resize(800, 400)->save($location);
+        
+                            Storage::delete($original->image);
+                            $post->image = $filename;
+                        }
         $post->title = $request->title;
         $post->slug = $request->slug;
         $post->category_id = $request->category;
-        $post->body = $request->body;
+        $post->body = Purifier::clean($request->body);
 
         $post->save();
 
@@ -158,6 +188,7 @@ class PostController extends Controller
     {
         $post = Post::find($id);
         $post->tags()->detach();
+        Storage::delete($post->image);
         $post->delete();;
 
         Session::flash('success', "Post was successfully deleted.");

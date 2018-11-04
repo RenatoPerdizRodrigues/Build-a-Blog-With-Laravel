@@ -100,6 +100,6 @@ class TagController extends Controller
         $tag->delete();
 
         Session::flash('success', 'Your tag was deleted');
-        return redirect()->route('tags.index');
+        return redirect()->route('tags.indexchrome://settings/content/notifications');
     }
 }

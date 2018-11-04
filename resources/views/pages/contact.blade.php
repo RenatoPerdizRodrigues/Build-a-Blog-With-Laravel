@@ -7,7 +7,8 @@
         <div class="col-md-12">
           <h1>Contact Me</h1>
           <hr>
-          <form>
+          <form method="POST" action="{{ route('contact') }}">
+            @csrf
             <div class="form-group">
               <label name="email">Email:</label>
               <input id="email" name="email" class="form-control">

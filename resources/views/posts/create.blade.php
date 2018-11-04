@@ -5,6 +5,15 @@
 @section('stylesheet')
     {!! Html::style('css/parsley.css') !!}
     {!! Html::style('css/select2.min.css') !!}
+    <script src="https://cloud.tinymce.com/stable/tinymce.min.js"></script>
+
+    <script>
+        tinymce.init({
+            selector: 'textarea',
+            plugins: 'link code image imagetools',
+            menubar: false
+        });
+    </script>
 @stop
 
 @section('content')
@@ -13,7 +22,7 @@
             <h1>Create New Post</h1>
             <hr>
             
-            {!! Form::open(array('route' => 'posts.store', 'data-parsley-validate' => '')) !!}
+            {!! Form::open(array('route' => 'posts.store', 'data-parsley-validate' => '', 'files' => 'true')) !!}
                 {{ Form::label('title', 'Title') }}
                 {{ Form::text('title', null, array('class' => 'form-control', 'required' => '', 'maxlength' => '255')) }}
 
@@ -34,8 +43,11 @@
                     @endforeach
                 </select>
 
+                {{ Form::label('featured_image', 'Upload Featured Image:')}}
+                {{ Form::file('featured_image')}}
+
                 {{ Form::label('body', 'Post Body:') }}
-                {{ Form::textarea('body', null, array('class' => 'form-control', 'required' => '', 'maxlength' => '255')) }}
+                {{ Form::textarea('body', null, array('class' => 'form-control','maxlength' => '255')) }}
             
                 {{ Form::submit('Create Post', array('class' => 'btn btn-success btn-lg btn-block', 'style' => 'margin-top: 20px;')) }}
             {!! Form::close() !!}

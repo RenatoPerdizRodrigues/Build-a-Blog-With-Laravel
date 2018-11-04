@@ -5,11 +5,20 @@
 @section('stylesheet')
     {!! Html::style('css/parsley.css') !!}
     {!! Html::style('css/select2.min.css') !!}
+    <script src="https://cloud.tinymce.com/stable/tinymce.min.js"></script>
+
+    <script>
+        tinymce.init({
+            selector: 'textarea',
+            plugins: 'link code image imagetools',
+            menubar: false
+        });
+    </script>
 @stop
 
 @section('content')
     <div class="row">
-        {!! Form::model($post, ['route' => ['posts.update', $post->id], 'method' => 'POST']) !!}
+        {!! Form::model($post, ['route' => ['posts.update', $post->id], 'method' => 'PUT', 'files' => true]) !!}
         <div class="col-md-8">
             {{ Form::label('title', 'Title')}}
             {{ Form::text('title', null, ["class" => 'form-control input-lg'])}}
@@ -31,7 +40,10 @@
                     @endforeach
                 </select>
 
-                <input name="_method" type="hidden" value="PATCH">;
+                {{ Form::label('featured_image', 'Update Featured Image:', ['class' => 'form-spacing-top'])}}
+                {{ Form::file('featured_image')}}
+
+                <input name="_method" type="hidden" value="PATCH">
 
             {{ Form::label('body', 'Body', ["class" => 'form-spacing-top'])}}
             {{ Form::textarea('body', null, ["class" => 'form-control'])}}
