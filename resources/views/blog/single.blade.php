@@ -7,11 +7,16 @@
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <h1>{{ $post->title }}</h1>
-            <img src="{{asset('images/' . $post->image)}}">
+            @if($post->image)
+                <img src="{{asset('images/' . $post->image)}}">
+            @endif
             <p>{!! $post->body !!}</p>
             <hr>
             <!-- Post é um modelo do objeto Post, e a função category chama o médoto qu conexta as duas -->
-            <p>Category: {{ $post->category->name }}
+            <p>Category: {{ $post->category->name }}<br>
+                @foreach($post->tags as $tag)
+                    <span class="label label-default">{{ $tag->name }}</span>
+                @endforeach
         </div>
     </div>
 

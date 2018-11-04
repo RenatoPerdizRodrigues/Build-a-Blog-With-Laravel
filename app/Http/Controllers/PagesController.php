@@ -8,7 +8,7 @@
     class PagesController extends Controller{
        
         public function getIndex(){
-            $posts = Post::orderBy('created_at', 'desc')->take(4)->get();
+            $posts = Post::orderBy('created_at', 'desc')->take(5)->get();
             return view('pages/welcome')->withPosts($posts);
         }
 

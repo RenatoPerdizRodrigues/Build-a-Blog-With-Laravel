@@ -12,33 +12,27 @@ class PostsTableSeeder extends Seeder
      */
     public function run()
     {
-        /** Code used for plain Lorem Ipsum posts
-        for ($i = 0; $i <= 10; $i++){
-            Post::insert([
+        for ($i = 1; $i <= 10; $i++){
+            $post = Post::create([
                 'title' => simplexml_load_file('http://www.lipsum.com/feed/xml?amount=1&what=words&start=0')->lipsum,
-                'body' => file_get_contents('http://loripsum.net/api/3/medium/plaintext'),
-                'slug' => str_random(3).'-'.str_random(5).'-'.str_random(3)
+                'body' => file_get_contents('http://loripsum.net/api/3/medium'),
+                'slug' => str_random(3).'-'.str_random(5).'-'.str_random(3),
+                'category_id' => rand(1, 3),
+                'image' => $i.'.jpeg'
             ]);
-        }
-        */
+            $post->save();
+            
+            $tag = array();
+            //Populate tags table
+            for ($i2 = 0; $i2 <= 3; $i2++){
+                $which = rand(0, 4);
+                if ($which != 0){
+                    array_push($tag, $which);
+                }
+            }
 
-        //Code used for Hipster Ipsum formatted to PHP
-        for ($i = 0; $i <= 10; $i++){
-            $title = file_get_contents('http://hipsterjesus.com/api?paras=3&type=hipster-centric&html=false');
-            substr($title, 0, 10);
-            $title = explode(" ", $title);
-            $title[0] = explode("{\"text\":\"", $title[0]);
-
-            $text = file_get_contents('http://hipsterjesus.com/api?paras=3&type=hipster-centric&html=false');
-            substr($text, 9, 1000);
-            $text = explode("\",\"error", $text);
-            $text[0] = explode("{\"text\":\"", $text[0]);
-
-            Post::insert([
-                'title' => ucfirst($title[0][1]),
-                'body' => ucfirst($text[0][1].'.'),
-                'slug' => str_random(3).'-'.str_random(5).'-'.str_random(3)
-            ]);
+            //Sync tag_post table
+            $post->tags()->sync($tag, false);
         }
     }
 }

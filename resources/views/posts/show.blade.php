@@ -6,7 +6,9 @@
     <div class="row">
         <div class="col-md-8">
             <h1>{{ $post->title }}</h1>
-            <img src="{{asset('images/' . $post->image)}}">
+            @if($post->image)
+                <img src="{{asset('images/' . $post->image)}}">
+            @endif
             <p class="lead">{!! $post->body !!}</p>
             <hr>
 
